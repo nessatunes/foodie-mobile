@@ -13,6 +13,17 @@ Foi estilizado com stylesheet estilização nativa
 - **React Navigation:** 
 - **Expo:**
 
+| ![Foto](assets/home.png) | ![Foto](assets/favoritos.png) | ![Foto](assets/meu-pedido.png)| 
+|:----------------------------------------:|:----------------------------------------:|:----------------------------------------:|
+| ![Foto](assets/pedidos.png) | ![Foto](assets/perfil.png) |![Foto](assets/restaurante.png)|
 
-npm install - para criar a node
-npx expo start - para rodar 
+
+
+### Passos para instalação e inicialização
+
+1. Instale as dependências do projeto:  
+ ``npm install ``    
+
+
+2. Inicie o projeto com o Expo:  
+   ``npx expo start ``   

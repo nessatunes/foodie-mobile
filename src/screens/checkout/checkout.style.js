@@ -8,7 +8,6 @@ export const styles = {
     paddingRight: 20,
     paddingBottom: 15,
   },
-
   valores: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -23,5 +22,8 @@ export const styles = {
     fontSize: FONT_SIZE.sm,
     color: COLORS.dark_gray,
     fontWeight: "bold",
+  },
+  containerBtn: {
+    marginTop: 10,
   },
 };
