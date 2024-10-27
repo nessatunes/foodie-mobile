@@ -1,17 +1,59 @@
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { View, ScrollView, Alert } from "react-native";
 import { styles } from "./registro2.style.js";
 import Header from "../../components/header/header.jsx";
 import TextBox from "../../components/textbox/textbox.jsx";
 import Button from "../../components/button/button.jsx";
 import { useState } from "react";
+import api from "../../constants/api.js";
 
-function Registro2() {
+function Registro2(props) {
+  const nome = props.route.params.nome;
+  const email = props.route.params.email;
+  const senha = props.route.params.senha;
+
+  console.log(nome, email, senha);
+
   const [endereco, setEndereco] = useState("");
   const [complemento, setComplemento] = useState("");
   const [bairro, setBairro] = useState("");
   const [cidade, setCidade] = useState("");
   const [uf, setUf] = useState("");
   const [cep, setCep] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  async function ProcessarNovaConta() {
+    console.log(
+      nome,
+      email,
+      senha,
+      endereco,
+      complemento,
+      bairro,
+      cidade,
+      uf,
+      cep
+    );
+    try {
+      setLoading(true);
+      const response = await api.post("/usuarios", {
+        nome,
+        email,
+        senha,
+        endereco,
+        complemento,
+        bairro,
+        cidade,
+        uf,
+        cep,
+      });
+
+      Alert.alert("Conta criada com sucesso");
+    } catch (error) {
+      setLoading(false);
+      if (error.response?.data.error) Alert.alert(error.response.data.error);
+      else Alert.alert("Ocorreu um erro. Tente novamente mais tarde");
+    }
+  }
 
   return (
     <>
@@ -19,6 +61,7 @@ function Registro2() {
         <ScrollView
           style={styles.scrollView}
           automaticallyAdjustKeyboardInsets={true}
+          showsVerticalScrollIndicator={false}
         >
           <Header texto="Informe seu endereço." />
 
@@ -74,7 +117,11 @@ function Registro2() {
             </View>
 
             <View style={styles.form}>
-              <Button texto="Criar minha conta" />
+              <Button
+                texto="Criar minha conta"
+                onPress={ProcessarNovaConta}
+                isLoading={loading}
+              />
             </View>
           </View>
         </ScrollView>

@@ -1,17 +1,45 @@
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, Alert } from "react-native";
 import { styles } from "./login.style.js";
 import Header from "../../components/header/header.jsx";
 import TextBox from "../../components/textbox/textbox.jsx";
 import Button from "../../components/button/button.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import api from "../../constants/api.js";
+import { SaveUsuario, LoadUsuario } from "../../storage/storage.usuario.js";
 
 function Login(props) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  function ProcessarLogin() {
-    console.log(email, senha);
+  async function ProcessarLogin() {
+    try {
+      setLoading(true);
+      const response = await api.post("/usuarios/login", { email, senha });
+
+      //Salvar dados do usuario no storage local
+      await SaveUsuario(response.data);
+
+      Alert.alert("Sucesso");
+    } catch (error) {
+      setLoading(false);
+      await SaveUsuario({});
+      if (error.response?.data.error) Alert.alert(error.response.data.error);
+      else Alert.alert("Ocorreu um erro. Tente novamente mais tarde");
+    }
   }
+
+  async function CarregarDados() {
+    try {
+      const usuario = await LoadUsuario();
+
+      if (usuario.token) Alert.alert("Usuário já logado, pular tela de login");
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    CarregarDados();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -29,14 +57,18 @@ function Login(props) {
         <View style={styles.form}>
           <TextBox
             label="Senha"
-            isPassword={true}
+            isPassword={false}
             onChangeText={(texto) => setSenha(texto)}
             value={senha}
           />
         </View>
 
         <View style={styles.form}>
-          <Button texto="Acessar" onPress={ProcessarLogin} />
+          <Button
+            texto="Acessar"
+            onPress={ProcessarLogin}
+            isLoading={loading}
+          />
         </View>
       </View>
 
