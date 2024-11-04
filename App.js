@@ -1,8 +1,10 @@
 import Routes from "./src/routes.js";
-import RoutesAuth from "./src/routesAuth.js";
-
-const isUserAuth = false;
+import { AuthProvider } from "./src/contexts/auth.js";
 
 export default function App() {
-  return isUserAuth ? <RoutesAuth /> : <Routes />;
+  return (
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
+  );
 }
