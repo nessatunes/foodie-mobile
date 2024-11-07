@@ -9,7 +9,7 @@ function Banners(props) {
           return (
             <View key={index} style={styles.banner}>
               <TouchableOpacity>
-                <Image style={styles.icone} source={banner.icone} />
+                <Image style={styles.icone} source={{ uri: banner.icone }} />
               </TouchableOpacity>
             </View>
           );

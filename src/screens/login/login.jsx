@@ -3,7 +3,7 @@ import { styles } from "./login.style.js";
 import Header from "../../components/header/header.jsx";
 import TextBox from "../../components/textbox/textbox.jsx";
 import Button from "../../components/button/button.jsx";
-import { useEffect, useState, useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../../constants/api.js";
 import { SaveUsuario, LoadUsuario } from "../../storage/storage.usuario.js";
 import { AuthContext } from "../../contexts/auth.js";
@@ -12,6 +12,7 @@ function Login(props) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
+
   const { user, setUser } = useContext(AuthContext);
 
   async function ProcessarLogin() {
@@ -21,6 +22,8 @@ function Login(props) {
 
       if (response.data) {
         //Salvar dados do usuario no storage local
+        api.defaults.headers.common["Authorization"] =
+          "Bearer " + response.data.token;
         await SaveUsuario(response.data);
         setUser(response.data);
       }
@@ -36,7 +39,11 @@ function Login(props) {
     try {
       const usuario = await LoadUsuario();
 
-      if (usuario.token) setUser(usuario);
+      if (usuario.token) {
+        api.defaults.headers.common["Authorization"] =
+          "Bearer " + usuario.token;
+        setUser(usuario);
+      }
     } catch (error) {}
   }
 

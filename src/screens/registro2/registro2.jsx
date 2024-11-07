@@ -3,15 +3,17 @@ import { styles } from "./registro2.style.js";
 import Header from "../../components/header/header.jsx";
 import TextBox from "../../components/textbox/textbox.jsx";
 import Button from "../../components/button/button.jsx";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import api from "../../constants/api.js";
+import { SaveUsuario } from "../../storage/storage.usuario.js";
+import { AuthContext } from "../../contexts/auth.js";
 
 function Registro2(props) {
   const nome = props.route.params.nome;
   const email = props.route.params.email;
   const senha = props.route.params.senha;
 
-  console.log(nome, email, senha);
+  const { user, setUser } = useContext(AuthContext);
 
   const [endereco, setEndereco] = useState("");
   const [complemento, setComplemento] = useState("");
@@ -22,17 +24,6 @@ function Registro2(props) {
   const [loading, setLoading] = useState(false);
 
   async function ProcessarNovaConta() {
-    console.log(
-      nome,
-      email,
-      senha,
-      endereco,
-      complemento,
-      bairro,
-      cidade,
-      uf,
-      cep
-    );
     try {
       setLoading(true);
       const response = await api.post("/usuarios", {
@@ -47,7 +38,13 @@ function Registro2(props) {
         cep,
       });
 
-      Alert.alert("Conta criada com sucesso");
+      if (response.data) {
+        api.defaults.headers.common["Authorization"] =
+          "Bearer " + response.data.token;
+        //Salvar dados do usuario no storage local
+        await SaveUsuario(response.data);
+        setUser(response.data);
+      }
     } catch (error) {
       setLoading(false);
       if (error.response?.data.error) Alert.alert(error.response.data.error);

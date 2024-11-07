@@ -4,6 +4,7 @@ export const styles = {
   icone: {
     width: 220,
     height: 120,
+    borderRadius: 6,
   },
   banner: {
     paddingRight: 10,
