@@ -7,7 +7,7 @@ function Restaurante(props) {
       style={styles.restaurante}
       onPress={() => props.onPress()}
     >
-      <Image source={{uri: props.logotipo}} style={styles.logotipo} />
+      <Image source={{ uri: props.logotipo }} style={styles.logotipo} />
       <View style={styles.textos}>
         <Text style={styles.nome}>{props.nome}</Text>
         <Text style={styles.endereco}>{props.endereco}</Text>
